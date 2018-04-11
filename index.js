@@ -27,7 +27,7 @@ function getAllPoints() {
 	    idArray.push(this.id);
 	});
 
-	setRandomPoints(idArray);
+	firstCluster(idArray);
 
 	idArray = [];
 
@@ -39,7 +39,7 @@ function set(x, y, value) {
 
 
 
-function setRandomPoints(points) {
+function firstCluster(points) {
 
 	var groupATemp = [];
 	var groupBTemp = [];
@@ -115,9 +115,113 @@ function setRandomPoints(points) {
 	}
 
 
+}
+
+function getAveragePoints(clusterA, clusterB) {
+	var sumAX = 0;
+	var sumAY = 0;
+
+	var sumBX = 0;
+	var sumBY = 0;
+
+	for (var i = 0; i < clusterA.length; i++) {
+		var x = parseInt(clusterA[i].split("-")[0]);
+		var y = parseInt(clusterA[i].split("-")[1]);
+		
+		sumAX += x;
+		sumAY += y;
+	}
+
+	for (var i = 0; i < clusterB.length; i++) {
+		var x = parseInt(clusterB[i].split("-")[0]);
+		var y = parseInt(clusterB[i].split("-")[1]);
+		
+		sumBX += x;
+		sumBY += y;
+	}
+
+	return [(sumAX / clusterA.length), (sumAY / clusterA.length), (sumBX / clusterB.length), (sumBY / clusterB.length)]
 
 }
 
+function secondCluster(clusterA, clusterB) {
+	var points = getAveragePoints(clusterA, clusterB);
+
+	var x1 = points[0];
+	var y1 = points[1];
+	var x2 = points[0];
+	var y2 = points[1];
+
+	set(x1, y1, "testPoint");
+	set(x2, y2, "testPoint");
+
+	var slope =  Math.abs((y2 - y1) / (x2 - x1));
+
+	var midpointX = (x2 + x1) / 2;
+	var midpointY = (y2 + y1) / 2;
+
+
+	var yIntercept = midpointY - (midpointX * slope);
+
+	for (var i = 0; i < points.length; i++) {
+		var x = points[i].split("-")[0];
+		var y = points[i].split("-")[1];
+
+		var yl = (slope * x) + yIntercept;
+
+		var dy = yl - y;
+
+		if (dy > 0 && slope > 0) {
+			set(x, y, "groupA");
+			groupATemp.push(points[i]);
+		} else if (dy > 0 && slope < 0) {
+			set(x, y, "groupA");
+			groupATemp.push(points[i]);
+		} else if (dy < 0 && slope > 0) {
+			set(x, y, "groupB");
+			groupBTemp.push(points[i]);
+		} else if (dy < 0 && slope < 0) {
+			set(x, y, "groupB");
+			groupBTemp.push(points[i]);
+		}
+	}
+
+	print("aTemp" + ": " +  groupATemp);
+	print("A" + ": " +  groupA);
+	
+	print("bTemp" + ": " +  groupBTemp);
+	print("B" + ": " +  groupB);
+	
+	print(groupATemp.length == groupA.length);
+	print(groupBTemp.length == groupB.length);
+
+	print("");
+
+	if ((groupATemp.length == groupA.length && flag != 0)) {
+		print("yay");
+
+
+	} else {
+		
+		flag = flag + 2;
+
+		print("Nope");
+
+		groupA = groupATemp;
+		groupB = groupBTemp;
+
+		set(x1, y1, "grid");
+		set(x2, y2, "grid");
+
+		setRandomPoints(points);
+
+	}
+	
+}
+
+function group(x1, y1, x2, y2) {
+
+}
 
 function createGrid() {
 	document.write("<table>");
