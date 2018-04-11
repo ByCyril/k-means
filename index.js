@@ -39,6 +39,7 @@ function set(x, y, value) {
 
 
 
+
 function setRandomPoints(points) {
 
 	var groupATemp = [];
