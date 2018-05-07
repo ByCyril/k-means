@@ -2,28 +2,24 @@
 var width = 30
 var height = 30
 
-var groupA = [];
-var groupB = [];
 var flag = 0;
+var iteration = 50;
 
 function init() {
 	createGrid();
-
 }
 
 function getAllPoints() {
 
-	var idArray = [];
+	var pointsArray = [];
 
 	$('.point').each(function () {
-	    idArray.push(this.id);
+	    pointsArray.push(this.id);
 	});
 
-
-	kmeans(idArray, 2, 2, 28, 29);
+	kmeans(pointsArray, 2, 2, 28, 29);
 }
 
-var j = 0;
 
 function kmeans(points, centroiaAx, centroiaAy, centroiaBx, centroiaBy) {
 	var clusterRed = [];
@@ -53,8 +49,8 @@ function kmeans(points, centroiaAx, centroiaAy, centroiaBx, centroiaBy) {
 	var ca = getPointAverage(clusterRed);
 	var cb = getPointAverage(clusterBlue);
 
-	if (j <= 50) {
-		j++;
+	if (flag <= iteration) {
+		flag++;
 		set(centroiaAx, centroiaAy, "grid");
 		set(centroiaBx, centroiaBy, "grid");
 		kmeans(points, ca[0], ca[1], cb[0], cb[1]);
@@ -92,58 +88,6 @@ function getDistance(x1, y1, x2, y2) {
 
 
 
-
-
-
-function makePoint() {
-	$("td").click(function(event) {
-   		var id = event.target.id
-   		$("#" + id).attr('class', 'point');
-
-    });
-}
-
-function set(x, y, value) {
-	document.getElementById(x + "-" + y).setAttribute("class", value);
-}
-
-function createGrid() {
-	document.write("<table>");
-
-	for (var y = height; y >= 0; y--) {
-		document.write("<tr>");
-		for (var x = 0; x < width; x++) {
-			document.write("<td class='grid' id='"+ x + '-' + y + "'></td>");
-		}
-
-		document.write("</tr>");
-	}
-
-	document.write("</table>");
-}
-
-function rand(min, max) {
-	return Math.floor(Math.random() * (max - min) + min)
-}
-
-function print(x) {
-	console.log(x);
-}
-
-
-$(document).ready(function() {
-
-	makePoint()
-
-	$(document).keypress(function(event) {
-		if (event.which == 13) {
-			getAllPoints();
-		}
-
-
-	});
-
-})
 
 
 init();
